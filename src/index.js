@@ -53,7 +53,7 @@ export async function watch(list, callback, opts={}) {
 		} catch (error) {
 			console.error(error);
 		}
-		if (--wip) return handle();
+		if (--wip) handle();
 	}
 
 	// TODO: Catch `EPERM` on Windows for removed dir
@@ -61,10 +61,10 @@ export async function watch(list, callback, opts={}) {
 		if (wip > 1 || ignores.some(x => x.test(filename))) return;
 
 		clearTimeout(delay);
-		delay = setTimeout(async () => {
+		delay = setTimeout(() => {
 			if (wip++) return;
 			if (opts.clear) console.clear();
-			await handle();
+			handle();
 		}, 100);
 	}
 
