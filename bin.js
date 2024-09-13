@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 const mri = require('mri');
+const { spawn } = require('child_process');
 
-let i=0, command='';
+let i=0, command;
 const argv = process.argv.slice(2);
 for (; i < argv.length; i++) {
 	if (argv[i] === '--') {
-		command = argv.splice(++i).join(' ');
+		command = argv.splice(++i);
 		argv.pop();
 		break;
 	}
@@ -48,15 +49,19 @@ if (opts.help) {
 	process.exit(0);
 }
 
-if (!command.length) {
+if (!command?.length) {
 	console.error('Missing a command to execute!');
 	process.exit(1);
 }
 
-const { run, watch } = require('./dist');
+const { watch } = require('./dist');
 
 try {
-	const handler = run.bind(0, command);
+	const handler = () => new Promise((resolve, reject) => {
+		const proc = spawn(command[0], command.slice(1), { stdio: ['ignore', 'inherit', 'inherit'] });
+		proc.on('close', resolve);
+		proc.on('error', reject);
+	});
 	const dirs = opts._ || [opts.cwd];
 	watch(dirs, handler, opts);
 } catch (err) {
