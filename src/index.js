@@ -75,6 +75,6 @@ export async function watch(list, callback, opts={}) {
 	}
 
 	if (opts.eager) {
-		await callback();
+		await handle();
 	}
 }
