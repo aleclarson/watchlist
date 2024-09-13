@@ -20,7 +20,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "bundt",
+    "prepare": "bundt",
     "test": "uvu -r esm test"
   },
   "engines": {
