@@ -43,10 +43,11 @@ export async function watch(list, callback, opts={}) {
 	const ignores = ['node_modules'].concat(opts.ignore || []).map(x => new RegExp(x, 'i'));
 
 	let wip = 0;
-	const Triggers = new Set;
+	let delay = 0;
 	const Watchers = new Map;
 
 	async function handle() {
+		wip = 1;
 		try {
 			await callback();
 		} catch (error) {
@@ -57,17 +58,14 @@ export async function watch(list, callback, opts={}) {
 
 	// TODO: Catch `EPERM` on Windows for removed dir
 	async function onChange(dir, type, filename) {
-		if (ignores.some(x => x.test(filename))) return;
+		if (wip > 1 || ignores.some(x => x.test(filename))) return;
 
-		let tmp = join(dir, filename);
-		if (Triggers.has(tmp)) return;
-		if (wip++) return wip = 1;
-
-		if (opts.clear) console.clear();
-
-		Triggers.add(tmp);
-		await handle();
-		Triggers.delete(tmp);
+		clearTimeout(delay);
+		delay = setTimeout(async () => {
+			if (wip++) return;
+			if (opts.clear) console.clear();
+			await handle();
+		}, 100);
 	}
 
 	let dir, output, key;
