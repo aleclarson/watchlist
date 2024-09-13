@@ -56,14 +56,10 @@ if (!command?.length) {
 
 const { watch } = require('./dist');
 
-try {
-	const handler = () => new Promise((resolve, reject) => {
-		const proc = spawn(command[0], command.slice(1), { stdio: ['ignore', 'inherit', 'inherit'] });
-		proc.on('close', resolve);
-		proc.on('error', reject);
-	});
-	const dirs = opts._ || [opts.cwd];
-	watch(dirs, handler, opts);
-} catch (err) {
-	console.log('Oops~!', err);
-}
+const handler = () => new Promise((resolve, reject) => {
+	const proc = spawn(command[0], command.slice(1), { stdio: ['ignore', 'inherit', 'inherit'] });
+	proc.on('close', resolve);
+	proc.on('error', reject);
+});
+
+watch(opts._ || [opts.cwd], handler, opts);
