@@ -47,7 +47,11 @@ export async function watch(list, callback, opts={}) {
 	const Watchers = new Map;
 
 	async function handle() {
-		await callback();
+		try {
+			await callback();
+		} catch (error) {
+			console.error(error);
+		}
 		if (--wip) return handle();
 	}
 
