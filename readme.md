@@ -7,3 +7,4 @@ A fork of [watchlist](https://github.com/lukeed/watchlist) with the following ch
 - More reliable debouncing via `setTimeout`
 - Avoid crashing the process when the command fails
 - Removed the `run` function from `./src/index.js`
+- Fixed import from TypeScript module where `moduleResolution` is `bundler` or `nodeNext`
