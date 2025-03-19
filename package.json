@@ -1,6 +1,6 @@
 {
   "name": "@aleclarson/watchlist",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Recursively watch a list of directories & run a command on any file system changes",
   "module": "dist/index.mjs",
   "main": "dist/index.js",
